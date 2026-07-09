@@ -37,7 +37,7 @@ const pageChangerPrev = () => {
     uiChange = apiData.map((e, i) => {
       return (
         <div key={i}>
-          <a href={e.url} target="_blank">
+          <a href={e.url} target="_blank" rel="noopener noreferrer">
             <div className="h-45 w-50 rounded-lg overflow-hidden bg-gray-500 shadow-[0_0_15px_white]">
               <img
                 className=" h-full w-full object-cover"
