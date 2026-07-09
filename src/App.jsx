@@ -3,36 +3,76 @@ import { useEffect, useState } from "react";
 
 const App = () => {
   const [apiData, setApiData] = useState([]);
+  const [ind, setInd] = useState(1);
+const pageChangerNext = () => {
+  setInd((prev) => prev + 1);
+ 
+};
 
+const pageChangerPrev = () => {
+  if (ind > 1) {
+    setInd((prev) => prev - 1);
+   
+  }}
   const getData = async () => {
     const api = await axios.get(
-      "https://picsum.photos/v2/list?page=2&limit=10",
+      `https://picsum.photos/v2/list?page=${ind}&limit=50`,
     );
     const dataFile = api.data;
     setApiData(dataFile);
-    console.log(apiData);
   };
+  useEffect(
+    function () {
+      getData();
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",})
+    },
+    [ind]
+  );
+
   let uiChange = "loading...";
 
   if (apiData.length >= 0) {
     uiChange = apiData.map((e, i) => {
       return (
-        <div>
-          <div key={i} className="h-40 w-44 rounded-lg overflow-hidden">
-            <img className=" h-full w-full object-cover" src={e.download_url} />
-          </div>
-          <h2 className="">{e.author}</h2>
+        <div key={i}>
+          <a href={e.url} target="_blank">
+            <div className="h-45 w-50 rounded-lg overflow-hidden bg-gray-500">
+              <img
+                className=" h-full w-full object-cover"
+                src={e.download_url}
+                 alt={e.author}
+              />
+            </div>
+          </a>
+          <h2 className="text-2xl">{e.author}</h2>
         </div>
       );
     });
   }
 
   return (
-    <div
-      onClick={getData}
-      className="h-screen w-full text-white bg-black overflow-auto"
-    >
-      <div className="flex flex-wrap gap-5"> {uiChange}</div>
+    <div className="h-screen w-full justify-center items-center text-white bg-black overflow-auto py-8 px-2">
+      <div className="flex w-full justify-around flex-wrap gap-5 jus items-center">
+        {uiChange}
+      </div>
+      <div className="w-full flex justify-center items-center h-15 gap-7 mt-6 text-xl ">
+        <button
+          onClick={pageChangerPrev}
+          className=" px-3.5 py-1.5 rounded-full bg-amber-600"
+        >
+          {"<"}
+        </button>
+         <h3 className="text-2xl font-bold">Page {ind}</h3>
+        <button
+          onClick={pageChangerNext}
+          className=" px-3.5 py-1.5 rounded-full bg-amber-600"
+        >
+          {">"}
+        </button>
+      </div>
     </div>
   );
 };
